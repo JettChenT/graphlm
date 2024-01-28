@@ -1,4 +1,3 @@
-import React, { useCallback } from 'react';
 import ReactFlow, {
   MiniMap,
   Controls,
@@ -6,36 +5,39 @@ import ReactFlow, {
   useNodesState,
   useEdgesState,
   addEdge,
-} from 'reactflow';
-import TextUpdaterNode from './TextUpdaterNode';
- 
-import 'reactflow/dist/style.css';
+  useStore,
+  ReactFlowProvider,
+} from "reactflow";
 
-const nodeTypes = {textUpdater: TextUpdaterNode}
- 
-const initialNodes = [
-  { id: '3', type: 'textUpdater', position: { x: 100, y:0}, data: {value: 100} }
-];
+import "reactflow/dist/style.css";
+import InputNode from "./InputNode";
+import LLMNode from "./LLMNode";
+import { shallow } from "zustand/shallow";
 
-const initialEdges = [{ id: 'e1-2', source: '1', target: '2' }];
- 
+const nodeTypes = {};
+
+const selector = (state) => ({
+  nodes: state.nodes,
+  edges: state.edges,
+  onNodesChange: state.onNodesChange,
+  onEdgesChange: state.onEdgesChange,
+  onConnect: state.onConnect,
+});
+
 export default function App() {
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
- 
-  const onConnect = useCallback(
-    (params) => setEdges((eds) => addEdge(params, eds)),
-    [setEdges],
+  const { nodes, edges, onNodesChange, onEdgesChange, onConnect } = useStore(
+    selector,
+    shallow
   );
- 
+
   return (
-    <div style={{ width: '100vw', height: '100vh' }}>
+    <div style={{ width: "100vw", height: "100vh" }}>
       <ReactFlow
         nodeTypes={nodeTypes}
         nodes={nodes}
         edges={edges}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
+        // onNodesChange={onNodesChange}
+        // onEdgesChange={onEdgesChange}
         onConnect={onConnect}
       >
         <Controls />

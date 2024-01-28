@@ -1,13 +1,35 @@
-import { Handle, NodeProps, Position } from 'reactflow';
-import useStore, {NodeData} from './store';
+import { Handle, NodeProps, Position } from "reactflow";
+import useStore from "./store";
+import React, { useState, useEffect } from "react";
 
-import React from 'react'
+const InputNode = (props: NodeProps) => {
+  const { id, data } = props;
+  const { updateNodeContent } = useStore();
+  const [textAreaValue, setTextAreaValue] = useState(data.content.content);
 
-const InputNode = () => {
-    const updateText = useStore((st) => st.)
+  useEffect(() => {
+    setTextAreaValue(data.content.content);
+  }, [data.content.content]);
+
+  const handleTextAreaChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    const newValue = event.target.value;
+    setTextAreaValue(newValue);
+    updateNodeContent(id, { ...data.content, content: newValue });
+  };
+
   return (
-    <div>InputNode</div>
-  )
-}
+    <div className="react-flow__node-default node-input w-48">
+      <Handle type="target" position={Position.Left} />
+      <textarea
+        value={textAreaValue}
+        onChange={handleTextAreaChange}
+        className="nodrag resize-none border-2 border-gray-300 rounded-md p-2"
+      />
+      <Handle type="source" position={Position.Right} />
+    </div>
+  );
+};
 
-export default InputNode
+export default InputNode;
