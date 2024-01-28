@@ -47,6 +47,7 @@ export type EditorState = {
   getSourcesById: (nodeId: string) => string[] | undefined;
   getNodeById: (nodeId: string) => Node<NodeData> | undefined; // Added function to get node by id
   setLLMConfig: (config: LLM_config) => OpenAI;
+  createNode: (node: Node<NodeData>) => void;
   llm_config: LLM_config;
   llm: OpenAI;
 };
@@ -114,6 +115,11 @@ const useStore = create<EditorState>((set, get) => ({
       }),
     });
     return get().llm;
+  },
+  createNode: (node) => {
+    set({
+      nodes: [...get().nodes, node],
+    });
   },
   llm: null,
 }));

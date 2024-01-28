@@ -20,8 +20,9 @@ const InputNode = (props: NodeProps) => {
   };
 
   return (
-    <div className="react-flow__node-default node-input w-48">
+    <div className="react-flow__node-default node-input text-left w-48">
       <Handle type="target" position={Position.Left} />
+      <span className="text-blue-900 block text-xs mb-1">Input Node</span>
       <textarea
         value={textAreaValue}
         onChange={handleTextAreaChange}

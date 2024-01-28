@@ -4,10 +4,9 @@ import useStore, { EditorState, Content, NodeData } from "./store";
 import { HumanMessage } from "langchain/schema";
 import chatgpt from "./cgpt";
 
-const handleStyle = { left: 10 };
-
 export default function LLMNode({ id, data }: NodeProps<NodeData>) {
   const [content, setContent] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false); // Added loading state
   const {
     llm,
     llm_config,
@@ -25,6 +24,7 @@ export default function LLMNode({ id, data }: NodeProps<NodeData>) {
   }));
 
   const refreshContent = useCallback(async () => {
+    setIsLoading(true); // Set loading state to true when refreshing
     console.log("refreshing content");
     const sourceIds = getSourcesById(id);
     if (sourceIds) {
@@ -59,21 +59,23 @@ export default function LLMNode({ id, data }: NodeProps<NodeData>) {
         updateNodeContent(id, { type: "text", content: text });
       }
     }
+    setIsLoading(false); // Set loading state to false after refreshing
   }, [id, llm, getSourcesById, retrieveContentById, updateNodeContent]);
 
   return (
-    <div className="react-flow__node-default w-48 p-2 min-h-48 bg-white rounded shadow">
-      <Handle type="target" position={Position.Left} style={handleStyle} />
+    <div className="react-flow__node-default w-52 min-h-48 bg-white rounded shadow nowheel">
+      <Handle type="target" position={Position.Left} />
       <button
         className="nodrag bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         onClick={refreshContent}
+        disabled={isLoading} // Disable button when loading
       >
-        Refresh
+        {isLoading ? "Loading..." : "GPT!"}
       </button>
-      <div className="overflow-scroll mt-4 border-t border-gray-200 pt-4">
+      <div className="overflow-y-scroll mt-4 mx-2 border-t bg-gray-100 rounded-lg border-gray-200 pt-2 min-h-36 max-h-60 nodrag no-scrollbar">
         {content}
       </div>
-      <Handle type="source" position={Position.Right} style={handleStyle} />
+      <Handle type="source" position={Position.Right} />
     </div>
   );
 }

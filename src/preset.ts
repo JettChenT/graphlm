@@ -1,5 +1,39 @@
 import { NodeData } from "./store";
 import { Node } from "reactflow";
+import { nanoid } from "nanoid";
+
+export const newInputNode = (x: number, y: number) => {
+  return {
+    id: nanoid(),
+    type: "inputNode",
+    position: { x: x, y: y },
+    data: {
+      type: "Text",
+      title: "Text",
+      status: null,
+      auxiliary: {},
+      content: {
+        type: "text",
+        content: "Hello World",
+      },
+    },
+  };
+};
+
+export const newLLMNode = (x: number, y: number) => {
+  return {
+    id: nanoid(),
+    type: "llmNode",
+    position: { x: x, y: y },
+    data: {
+      type: "Generation",
+      title: "Generation",
+      status: null,
+      auxiliary: {},
+      content: null,
+    },
+  };
+};
 
 export const initialNodes: Node<NodeData>[] = [
   {
@@ -7,8 +41,8 @@ export const initialNodes: Node<NodeData>[] = [
     type: "inputNode",
     position: { x: 250, y: 100 },
     data: {
-      type: "Idea",
-      title: "Idea",
+      type: "Text",
+      title: "Text",
       status: null,
       auxiliary: {},
       content: {
@@ -27,6 +61,21 @@ export const initialNodes: Node<NodeData>[] = [
       status: null,
       auxiliary: {},
       content: null,
+    },
+  },
+  {
+    id: "3",
+    type: "inputNode",
+    position: { x: 250, y: 300 },
+    data: {
+      type: "Text",
+      title: "Text",
+      status: null,
+      auxiliary: {},
+      content: {
+        type: "text",
+        content: "Task: Expand",
+      },
     },
   },
 ];
