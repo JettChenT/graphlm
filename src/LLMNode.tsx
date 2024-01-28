@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 import { Handle, NodeProps, Position, getIncomers } from "reactflow";
 import useStore, { EditorState, Content, NodeData } from "./store";
 import { HumanMessage } from "langchain/schema";
+import chatgpt from "./cgpt";
 
 const handleStyle = { left: 10 };
 
@@ -9,12 +10,14 @@ export default function LLMNode({ id, data }: NodeProps<NodeData>) {
   const [content, setContent] = useState<string>("");
   const {
     llm,
+    llm_config,
     setLLMConfig,
     retrieveContentById,
     updateNodeContent,
     getSourcesById,
   } = useStore((state: EditorState) => ({
     llm: state.llm,
+    llm_config: state.llm_config,
     retrieveContentById: state.retrieveContentById,
     updateNodeContent: state.updateNodeContent,
     getSourcesById: state.getSourcesById,
@@ -35,7 +38,6 @@ export default function LLMNode({ id, data }: NodeProps<NodeData>) {
         .join("\n---\n");
 
       if (sourcesContent) {
-        const message = new HumanMessage(sourcesContent);
         let cur_lm = llm;
         if (cur_lm === null) {
           cur_lm = setLLMConfig({
@@ -45,8 +47,14 @@ export default function LLMNode({ id, data }: NodeProps<NodeData>) {
             api_key: prompt("Enter API KEY"),
           });
         }
-        const result = await cur_lm.invoke([message]);
-        const text = result[0]?.text || "";
+        const api_key = useStore.getState().llm_config.api_key;
+        const result = await chatgpt(
+          {
+            messages: [{ role: "user", content: sourcesContent }],
+          },
+          api_key
+        );
+        const text = result.choices[0].message.content || "";
         setContent(text);
         updateNodeContent(id, { type: "text", content: text });
       }

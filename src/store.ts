@@ -1,4 +1,4 @@
-import { ChatOpenAI } from "@langchain/openai";
+import OpenAI from "openai";
 
 import { create } from "zustand";
 import {
@@ -14,6 +14,7 @@ import {
   applyNodeChanges,
   applyEdgeChanges,
 } from "reactflow";
+import { initialEdges, initialNodes } from "./preset";
 
 export type Content = {
   type: string;
@@ -21,7 +22,6 @@ export type Content = {
 };
 
 export type NodeData<T = any> = {
-  sources: string[]; // the ids of the nodes that this node is connected to
   content: Content;
   title: string;
   status: string;
@@ -46,14 +46,14 @@ export type EditorState = {
   retrieveContentById: (nodeId: string) => Content | undefined;
   getSourcesById: (nodeId: string) => string[] | undefined;
   getNodeById: (nodeId: string) => Node<NodeData> | undefined; // Added function to get node by id
-  setLLMConfig: (config: LLM_config) => ChatOpenAI;
+  setLLMConfig: (config: LLM_config) => OpenAI;
   llm_config: LLM_config;
-  llm: ChatOpenAI;
+  llm: OpenAI;
 };
 
 const useStore = create<EditorState>((set, get) => ({
-  nodes: [],
-  edges: [],
+  nodes: initialNodes,
+  edges: initialEdges,
   onNodesChange: (changes: NodeChange[]) => {
     set({
       nodes: applyNodeChanges(changes, get().nodes),
@@ -107,11 +107,10 @@ const useStore = create<EditorState>((set, get) => ({
   setLLMConfig: (config) => {
     set({
       llm_config: config,
-      llm: new ChatOpenAI({
-        openAIApiKey: config.api_key,
-        configuration: {
-          baseURL: config.api_base,
-        },
+      llm: new OpenAI({
+        apiKey: config.api_key,
+        baseURL: config.api_base,
+        dangerouslyAllowBrowser: true,
       }),
     });
     return get().llm;
