@@ -42,17 +42,18 @@ export default function LLMNode({ id, data }: NodeProps<NodeData>) {
         if (cur_lm === null) {
           cur_lm = setLLMConfig({
             api_base:
-              prompt("API Base", "https://api.openai.com/v1") ||
-              "https://api.openai.com/v1",
-            api_key: prompt("Enter API KEY"),
+              prompt("API Base", "https://api.openai.com/v1"),
+              api_key: prompt("Enter API KEY"),
           });
         }
         const api_key = useStore.getState().llm_config.api_key;
+        const base_url = useStore.getState().llm_config.api_base;
         const result = await chatgpt(
           {
             messages: [{ role: "user", content: sourcesContent }],
           },
-          api_key
+          api_key,
+          base_url
         );
         const text = result.choices[0].message.content || "";
         setContent(text);

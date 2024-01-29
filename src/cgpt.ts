@@ -1,7 +1,7 @@
-const chatgpt = async (params, api_secret_key: string) => {
+const chatgpt = async (params, api_secret_key: string, base_url:string) => {
   try {
     const response = await fetch(
-      "https://flag.smarttrot.com/v1/chat/completions",
+      `${base_url}/chat/completions`,
       {
         method: "POST",
         headers: {
