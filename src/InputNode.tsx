@@ -26,7 +26,7 @@ const InputNode = (props: NodeProps) => {
       <textarea
         value={textAreaValue}
         onChange={handleTextAreaChange}
-        className="nodrag resize-none border-2 border-gray-300 rounded-md p-2"
+        className="nodrag border-2 border-gray-300 rounded-md p-2"
       />
       <Handle type="source" position={Position.Right} />
     </div>

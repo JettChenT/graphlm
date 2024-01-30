@@ -8,6 +8,7 @@ import useStore, { EditorState } from "./store";
 import InputNode from "./InputNode";
 import LLMNode from "./LLMNode";
 import { newInputNode, newLLMNode } from "./preset";
+import SettingsModal from "./settings";
 
 const nodeTypes = {
   inputNode: InputNode,
@@ -33,10 +34,16 @@ function App() {
   useEffect(() => {
     const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "t") {
-        createNode(newInputNode(cursorPosition.x, cursorPosition.y));
-      } else if (event.key === "g") {
-        createNode(newLLMNode(cursorPosition.x, cursorPosition.y));
+      const activeElement = document.activeElement;
+      const isTextInputFocused =
+        activeElement && activeElement.tagName === "TEXTAREA";
+
+      if (!isTextInputFocused) {
+        if (event.key === "t") {
+          createNode(newInputNode(cursorPosition.x, cursorPosition.y));
+        } else if (event.key === "g") {
+          createNode(newLLMNode(cursorPosition.x, cursorPosition.y));
+        }
       }
     };
 
@@ -87,6 +94,7 @@ function App() {
           >
             Add LLM Node
           </button>
+          <SettingsModal />
         </Panel>
         <Background />
         <Controls />
