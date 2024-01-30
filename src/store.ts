@@ -33,6 +33,7 @@ export type LLM_config = {
   // Defaulting to OpenAI for now
   api_base: string;
   api_key: string;
+  model: string;
 };
 
 export type EditorState = {
@@ -104,6 +105,7 @@ const useStore = create<EditorState>((set, get) => ({
   llm_config: {
     api_base: "https://api.openai.com/v1",
     api_key: null,
+    model: "gpt-3.5-turbo-1106",
   },
   setLLMConfig: (config) => {
     set({

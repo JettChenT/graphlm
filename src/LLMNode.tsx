@@ -43,6 +43,7 @@ export default function LLMNode({ id, data }: NodeProps<NodeData>) {
           cur_lm = setLLMConfig({
             api_base: prompt("API Base", "https://api.openai.com/v1"),
             api_key: prompt("Enter API KEY"),
+            model: prompt("Enter Model ID", "gpt-3.5-turbo-1106"),
           });
         }
         const api_key = useStore.getState().llm_config.api_key;
@@ -50,6 +51,7 @@ export default function LLMNode({ id, data }: NodeProps<NodeData>) {
         const result = await chatgpt(
           {
             messages: [{ role: "user", content: sourcesContent }],
+            model: useStore.getState().llm_config.model,
           },
           api_key,
           base_url
@@ -72,7 +74,7 @@ export default function LLMNode({ id, data }: NodeProps<NodeData>) {
   };
 
   return (
-    <div className="react-flow__node-default w-52 min-h-48 bg-white rounded shadow nowheel">
+    <div className="react-flow__node-default w-56 min-h-48 bg-white rounded shadow nowheel">
       <Handle type="target" position={Position.Left} />
       <button
         className="nodrag bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
@@ -87,7 +89,7 @@ export default function LLMNode({ id, data }: NodeProps<NodeData>) {
       >
         Copy
       </button>
-      <div className="overflow-y-scroll mt-4 mx-2 border-t bg-gray-100 rounded-lg border-gray-200 pt-2 min-h-36 max-h-60 nodrag no-scrollbar">
+      <div className="overflow-y-scroll mt-4 mx-2 border-t bg-gray-100 rounded-lg border-gray-200 pt-2 min-h-36 max-h-60 nodrag no-scrollbar text-left p-2">
         {content}
       </div>
       <Handle type="source" position={Position.Right} />

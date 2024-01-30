@@ -9,15 +9,17 @@ const SettingsModal = () => {
 
   const [apiBase, setApiBase] = useState(llm_config.api_base);
   const [apiKey, setApiKey] = useState(llm_config.api_key);
+  const [model, setModel] = useState(llm_config.model); // Added state for model
   const [isOpen, setIsOpen] = useState(false); // State to manage modal open/close
 
   useEffect(() => {
     setApiBase(llm_config.api_base);
     setApiKey(llm_config.api_key);
-  }, [llm_config.api_base, llm_config.api_key]);
+    setModel(llm_config.model); // Set model when llm_config changes
+  }, [llm_config.api_base, llm_config.api_key, llm_config.model]);
 
   const handleSave = () => {
-    setLLMConfig({ api_base: apiBase, api_key: apiKey });
+    setLLMConfig({ api_base: apiBase, api_key: apiKey, model: model }); // Added model to config
     setIsOpen(false); // Close modal on save
   };
 
@@ -45,12 +47,22 @@ const SettingsModal = () => {
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                 />
               </label>
-              <label className="block mb-4">
+              <label className="block mb-2">
                 <span className="text-gray-700">API Key:</span>
                 <input
                   type="password"
                   value={apiKey}
                   onChange={(e) => setApiKey(e.target.value)}
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                />
+              </label>
+              <label className="block mb-4">
+                {" "}
+                <span className="text-gray-700">Model:</span>
+                <input
+                  type="text"
+                  value={model}
+                  onChange={(e) => setModel(e.target.value)}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                 />
               </label>

@@ -20,13 +20,13 @@ const InputNode = (props: NodeProps) => {
   };
 
   return (
-    <div className="react-flow__node-default node-input text-left w-48">
+    <div className="react-flow__node-default node-input text-left w-56">
       <Handle type="target" position={Position.Left} />
       <span className="text-blue-900 block text-xs mb-1">Input Node</span>
       <textarea
         value={textAreaValue}
         onChange={handleTextAreaChange}
-        className="nodrag border-2 border-gray-300 rounded-md p-2"
+        className="nodrag border-2 border-gray-300 rounded-md p-2 w-full nowheel"
       />
       <Handle type="source" position={Position.Right} />
     </div>
